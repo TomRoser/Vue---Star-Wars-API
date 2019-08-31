@@ -1,12 +1,12 @@
 <template>
   <div class="hello">
-    
+
     <div id="btn_show_all">
       <button @click="loadCharacters">Show all Characters</button>
     </div>
-    
+
     <input placeholder="Suchanfrage" @keyup="search()" v-model="query" ><button >Search for Character</button>
-   
+
     <div>Searching for: {{query}}</div>
 
     <div class="character_container">
@@ -15,8 +15,8 @@
           <span>Name:{{character.name}}</span> <br>
           <span>Height: {{character.height}}</span> <br>
           <span>Mass: {{character.mass}}</span> <br>
-          <span>Hair Color: {{character.hair_color}}</span> <br> 
-        </div> 
+          <span>Hair Color: {{character.hair_color}}</span> <br>
+        </div>
     </div>
 
   </div>
@@ -38,8 +38,11 @@ export default {
           .get('https://swapi.co/api/people')
           .then(response => {
             this.characters = response.data.results
-            })   
+            })
         }
+    },
+    mounted: function () {
+        this.loadCharacters();
     }
 }
 </script>
