@@ -1,77 +1,84 @@
 <template>
-  <div class="hello">
 
-    <div id="btn_show_all">
-      <button @click="loadCharacters">Show all Characters</button>
-    </div>
+    <div>
+        <div class="hello">Star Wars Characters</div>
 
-    <input placeholder="Suchanfrage" @keyup="search()" v-model="query" ><button >Search for Character</button>
+        <button @click="showAllCharacters">Show All characters</button>
 
-    <div>Searching for: {{query}}</div>
+        <section v-if="errored">
+            <p>No Data :-(</p>
+        </section>
 
-    <div class="character_container">
-        <div class="no_results" v-if="characters.length === 0">Keine Ergebnisse</div>
-        <div class="character_card" v-for="character in characters" v-bind:key="character.name">
-          <span>Name:{{character.name}}</span> <br>
-          <span>Height: {{character.height}}</span> <br>
-          <span>Mass: {{character.mass}}</span> <br>
-          <span>Hair Color: {{character.hair_color}}</span> <br>
+        <section v-else>
+            <div v-if="loading">Loading...</div>
+        </section>
+
+        <div>
+            {{ characterList }}
         </div>
+  
     </div>
 
-  </div>
 </template>
 
 <script>
 
 export default {
     name: 'MainContent',
-    data: function () {
-      return {
-      characters: [],
-      query: ''
-      }
-    },
-    methods: {
-      loadCharacters: function() {
-        this.$axios
-          .get('https://swapi.co/api/people')
-          .then(response => {
-            this.characters = response.data.results
-            })
+        data: function () {
+        return {
+            characters: [],
+            loading: true,
+            errored: false,
+            characterList: []
         }
     },
-    mounted: function () {
-        this.loadCharacters();
+    mounted: function() {
+            this.$axios
+                .get('https://swapi.co/api/people')
+                .then(response => {
+                this.characters = response.data.results
+            }) 
+        .catch(error => {
+            console.log(error)
+                this.errored = true
+            })
+                .finally(() => this.loading = false)
+    },
+    methods: {
+        showAllCharacters: function () {
+            
+        }
     }
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
-  margin: 40px 0 0;
+margin: 40px 0 0;
 }
 ul {
-  list-style-type: none;
-  padding: 0;
+list-style-type: none;
+padding: 0;
 }
 li {
-  display: inline-block;
-  margin: 0 10px;
+display: inline-block;
+margin: 0 10px;
 }
 a {
-  color: #42b983;
+color: #42b983;
 }
 
 .character_card {
-  border: solid;
-  display: inline-block;
-  margin: 2%;
+border: solid;
+display: inline-block;
+margin: 2%;
 }
 #btn_show_all {
-  display: block;
-  text-align: center;
+display: block;
+text-align: center;
 }
 
 </style>
